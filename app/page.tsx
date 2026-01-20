@@ -45,7 +45,7 @@ export default function Home() {
             className="inline-flex items-center gap-2 bg-white text-[#041E42] px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-100 hover:scale-105 transition transform shadow-lg"
           >
             <ShoppingBag size={20} />
-            Order Your Piece - $99
+            Order Your Piece - $30
           </a>
           <p className="mt-4 text-slate-400 text-sm">Free shipping to State College & beyond.</p>
         </div>
@@ -55,7 +55,7 @@ export default function Home() {
       <section className="max-w-6xl mx-auto py-20 px-6 grid md:grid-cols-2 gap-12 items-center">
         <div className="relative group">
           <div className="absolute -inset-2 bg-[#041E42] rounded-2xl opacity-10 group-hover:opacity-20 transition blur-lg"></div>
-          {/* PLACEHOLDER FOR THE IMAGE YOU UPLOADED */}
+          {/* PLACEHOLDER FOR THE IMAGE */}
           <div className="relative bg-white p-4 rounded-2xl shadow-xl rotate-1 group-hover:rotate-0 transition duration-500">
              <img 
               src="/old-main-wood.jpg" 
