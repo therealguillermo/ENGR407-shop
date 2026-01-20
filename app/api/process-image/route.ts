@@ -53,11 +53,11 @@ export async function POST(request: NextRequest) {
     // Initialize Gemini
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    // Use gemini-1.5-flash or gemini-1.5-pro for image understanding
-    // Note: For image generation, you may need gemini-2.0-flash-exp or similar
-    // Check Google's latest docs for image generation models
+    // Use gemini-2.5-flash-image for image-to-image generation
+    // This model supports text-and-image-to-image editing
+    // Note: Image generation models require paid API plan (not available on free tier)
     const model = genAI.getGenerativeModel({ 
-      model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' 
+      model: process.env.GEMINI_MODEL || 'gemini-2.5-flash-preview-image' 
     });
 
     // Prepare the image part
@@ -69,11 +69,10 @@ export async function POST(request: NextRequest) {
     };
 
     // Generate the laser-engraved version
-    // Note: Standard Gemini models return text descriptions
-    // For actual image generation, you may need to use a different endpoint
-    // or use a model specifically designed for image generation
+    // Using text-and-image-to-image generation with gemini-2.5-flash-image
+    // Format: array with text prompt object and image data object
     const result = await model.generateContent([
-      LASER_ENGRAVING_PROMPT,
+      { text: LASER_ENGRAVING_PROMPT },
       imagePart,
     ]);
 
