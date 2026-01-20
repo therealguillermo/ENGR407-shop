@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Old Main Shop - Laser Engraved Collection
 
-## Getting Started
+A Next.js e-commerce site for custom laser-engraved wood art, featuring Penn State's Old Main and custom image uploads.
 
-First, run the development server:
+## Features
+
+- **Static Site Generation**: Fast, SEO-friendly pages
+- **Custom Image Upload**: Upload photos to preview laser-engraved versions
+- **Gemini AI Integration**: AI-powered image-to-laser-engraving conversion
+- **Stripe Integration**: Ready for payment processing
+
+## Setup Instructions
+
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Then edit `.env.local` and add your Gemini API key:
+
+```
+GEMINI_API_KEY=your_actual_api_key_here
+```
+
+**Get your Gemini API key:**
+1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Sign in with your Google account
+3. Create a new API key
+4. Copy it to your `.env.local` file
+
+### 3. Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The site can be deployed to Vercel (recommended) or any platform that supports Next.js:
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+**For Vercel:**
+1. Push your code to GitHub
+2. Import the project in Vercel
+3. Add your `GEMINI_API_KEY` in Vercel's environment variables
+4. Deploy!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/
+  ├── page.tsx              # Home page
+  ├── upload/
+  │   └── page.tsx          # Image upload & preview page
+  └── api/
+      └── process-image/
+          └── route.ts      # API endpoint for image processing
 
-## Deploy on Vercel
+config/
+  └── prompt.ts             # Laser engraving prompt (easy to edit!)
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Customizing the Prompt
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Edit the laser engraving prompt in `config/prompt.ts`. This file contains the instructions sent to Gemini for converting images to laser-engraving style.
+
+## Backend Setup
+
+This project uses **Next.js API Routes** which run as serverless functions:
+
+- **No separate backend needed** - everything is in one codebase
+- **Free on Vercel** - generous free tier for serverless functions
+- **Automatic scaling** - handles traffic spikes automatically
+- **Secure** - API keys stay server-side, never exposed to clients
+
+The API route (`app/api/process-image/route.ts`) handles:
+- Image upload validation
+- Calling Gemini API
+- Returning processed images
+
+## Notes
+
+- The upload page is client-side (static)
+- Only the API route runs server-side (serverless function)
+- Most pages remain static for optimal performance
+- API key is kept secure in environment variables
