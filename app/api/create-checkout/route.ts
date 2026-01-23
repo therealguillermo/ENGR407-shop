@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { put } from '@vercel/blob';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-12-15.clover',
-});
+// Initialize Stripe lazily (only when needed)
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not configured');
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2025-12-15.clover',
+  });
+}
 
 /**
  * Create Stripe Checkout Session with image URLs in metadata
@@ -12,12 +18,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
  */
 export async function POST(request: NextRequest) {
   try {
-    if (!process.env.STRIPE_SECRET_KEY) {
+    if (!process.env.STRIPE_SECRET_KEY || !process.env.BLOB_READ_WRITE_TOKEN) {
       return NextResponse.json(
-        { error: 'STRIPE_SECRET_KEY not configured' },
+        { error: 'Stripe or Blob storage not configured.' },
         { status: 500 }
       );
     }
+
+    const stripe = getStripe();
 
     const formData = await request.formData();
     const originalImageBase64 = formData.get('originalImage') as string;

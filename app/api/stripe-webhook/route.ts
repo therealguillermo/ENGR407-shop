@@ -3,9 +3,15 @@ import Stripe from 'stripe';
 import { put } from '@vercel/blob';
 import { sendPurchaseNotification } from '@/lib/email';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-12-15.clover',
-});
+// Initialize Stripe lazily (only when needed)
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not configured');
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2025-12-15.clover',
+  });
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -18,12 +24,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json(
-      { error: 'STRIPE_WEBHOOK_SECRET not configured' },
+      { error: 'Stripe not configured' },
       { status: 500 }
     );
   }
+
+  const stripe = getStripe();
 
   let event: Stripe.Event;
 
